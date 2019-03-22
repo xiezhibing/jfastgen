@@ -1,0 +1,39 @@
+package ${classBean.packageBean.controllerPackage};
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import io.parcelx.base.controller.BaseController;
+import io.parcelx.base.service.IBaseService;
+import ${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean;
+import ${classBean.packageBean.servicePackage}.I${classBean.entityClassName}Service;
+/**
+ * ${classBean.entityComment}
+ * @author ${author}
+ * @since ${date}
+ */
+@Controller
+#if(${classBean.moduleName} != "")
+@RequestMapping("/${classBean.moduleName}/${classBean.entityObjectName}")
+#else
+@RequestMapping("/${classBean.entityObjectName}")
+#end
+public class ${classBean.entityClassName}Controller extends BaseController<${classBean.entityClassName}Bean> {
+	
+	private static final long serialVersionUID = 1L;
+	private static Logger logger = LoggerFactory.getLogger(${classBean.entityClassName}Controller.class);
+	
+	@Autowired
+	private I${classBean.entityClassName}Service ${classBean.entityObjectName}Service;
+	
+	@Override
+	public IBaseService<${classBean.entityClassName}Bean> getBaseService(){
+		logger.info("注入baseService:{}", ${classBean.entityObjectName}Service);
+		return ${classBean.entityObjectName}Service;
+	}
+	
+	
+}

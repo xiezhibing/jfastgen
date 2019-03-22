@@ -1,0 +1,59 @@
+package ${classBean.packageBean.entityPackage};
+
+#foreach($impkg in ${classBean.importClassList})
+import ${impkg};
+#end
+import io.parcelx.base.model.BaseEntity;
+
+/**
+ * PO类 
+ * ${classBean.entityComment}
+ * @author ${author}
+ * @since ${date}
+ */
+public class ${classBean.entityClassName}Entity extends BaseEntity {
+
+    private static final long serialVersionUID = 1L;
+    
+#foreach($field in ${classBean.generalFieldList})
+#if("$!field.fieldComment" != "")
+    /** ${field.fieldComment} */
+#end
+	private ${field.fieldType} ${field.fieldName};
+#end
+
+#foreach($field in ${classBean.generalFieldList})
+#if(${field.fieldType.equals("Boolean")})
+#set($getprefix="is")
+#else
+#set($getprefix="get")
+#end
+#if("$!field.fieldComment" != "")
+    /** ${field.fieldComment} */
+#end
+	public ${field.fieldType} ${getprefix}${field.firstUpperName}() {
+		return ${field.fieldName};
+	}
+	
+#if("$!field.fieldComment" != "")
+    /** ${field.fieldComment} */
+#end
+	public void set${field.firstUpperName}(${field.fieldType} ${field.fieldName}) {
+		this.${field.fieldName} = ${field.fieldName};
+	}
+	
+#end
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("${classBean.entityClassName} [");
+#foreach($field in ${classBean.generalFieldList})			
+		builder.append("${field.fieldName}=");
+		builder.append(${field.fieldName}).append(", ");
+#end		
+		builder.append("]");
+		return builder.toString();
+	}
+	
+}

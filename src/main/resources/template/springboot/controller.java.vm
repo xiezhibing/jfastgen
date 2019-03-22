@@ -1,0 +1,105 @@
+package ${classBean.packageBean.controllerPackage};
+
+import java.io.Serializable;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.github.pagehelper.PageInfo;
+import com.meosun.data.Result;
+import ${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean;
+import ${classBean.packageBean.servicePackage}.I${classBean.entityClassName}Service;
+/**
+ * ${classBean.entityComment}
+ * @author ${author}
+ */
+@Controller
+#if(${classBean.moduleName} != "")
+@RequestMapping("/admin/v1/${classBean.moduleName}/${classBean.entityObjectName}")
+#else
+@RequestMapping("/${classBean.entityObjectName}")
+#end
+public class ${classBean.entityClassName}Controller implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	private static Logger logger = LoggerFactory.getLogger(${classBean.entityClassName}Controller.class);
+	
+	@Autowired
+	private I${classBean.entityClassName}Service ${classBean.entityObjectName}Service;
+	
+	/**
+	 * 新增或更新
+	 * @param ${classBean.entityObjectName}
+	 */
+	@ResponseBody
+	@RequestMapping(value="/save")
+	public Result save(${classBean.entityClassName}Bean ${classBean.entityObjectName}){
+		${classBean.entityObjectName}Service.save(${classBean.entityObjectName});
+		
+		return new Result(Result.SUCC, "保存成功");
+	}
+	
+	/**
+	 * 根据主键查询
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@GetMapping(value="/queryById")
+	public Result queryById(Long id){
+		${classBean.entityClassName}Bean data = ${classBean.entityObjectName}Service.queryById(id);
+		
+		return new Result(Result.SUCC, "查询成功", data);
+	}
+	
+	/**
+	 * 条件查询
+	 * @param ${classBean.entityObjectName}
+	 * @return
+	 */
+	@ResponseBody
+	@GetMapping(value="/queryOne")
+	public Result queryOne(${classBean.entityClassName}Bean ${classBean.entityObjectName}){
+		${classBean.entityClassName}Bean data = ${classBean.entityObjectName}Service.queryOne(${classBean.entityObjectName});
+		
+		return new Result(Result.SUCC, "查询成功", data);
+	}
+	
+	/**
+	 * 条件查询
+	 * @param ${classBean.entityObjectName}
+	 * @return
+	 */
+	@ResponseBody
+	@GetMapping(value="/queryList")
+	public Result queryList(${classBean.entityClassName}Bean ${classBean.entityObjectName}){
+		logger.info("条件查询");
+		List<${classBean.entityClassName}Bean> data = ${classBean.entityObjectName}Service.queryList(${classBean.entityObjectName});
+		
+		return new Result(Result.SUCC, "查询成功", data);
+	}
+	
+	/**
+	 * 分页查询
+	 * @param ${classBean.entityObjectName}
+	 * pageNum 页码
+	 * pageSize 每页显示数量
+	 * @return
+	 */
+	@ResponseBody
+    @GetMapping("/queryPageList")
+    public Result queryPageList(${classBean.entityClassName}Bean ${classBean.entityObjectName},
+            @RequestParam(name = "page", required = false, defaultValue = "1") int pageNum,
+            @RequestParam(name = "rows", required = false, defaultValue = "10") int pageSize){
+			
+        PageInfo<${classBean.entityClassName}Bean> data = ${classBean.entityObjectName}Service.queryPageList(${classBean.entityObjectName}, pageNum,pageSize);
+        return new Result(Result.SUCC, "查询成功", data);
+    }
+}

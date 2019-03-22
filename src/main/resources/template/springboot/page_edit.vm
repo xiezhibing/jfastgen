@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>${classBean.entityComment}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="bookmark" href="/favicon.ico" >
+<link rel="shortcut icon" href="/favicon.ico" />
+<link href="../../assets/easyui/easyui.css"  rel="stylesheet" type="text/css"/>
+<link href="../../assets/lib/Hui-iconfont/1.0.7/iconfont.css" rel="stylesheet" type="text/css" />
+<link href="../../assets/lib/iconfont/iconfont.css" rel="stylesheet" type="text/css" />
+<link href="../../assets/css/style.css" rel="stylesheet" type="text/css" />
+<link href="../../assets/css/details.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<form id="form-box">
+<div class="list-box">
+	<p>
+#set($fieldIndex=1)  
+#foreach($field in ${classBean.generalFieldList})
+#set($vdisable="")
+#if(${field.fieldName} == 'createTime' || ${field.fieldName} == 'createUserId' || ${field.fieldName} == 'modifyTime' || ${field.fieldName} == 'modifyUserId')
+#set($vdisable="disabled='disabled'")
+#end
+#if(${field.options.size()} > 0)
+		<span><i>${field.fieldComment}：</i>
+			<select name="${field.fieldName}" id="${field.fieldName}" title="${field.optionComment}"/>
+				<option value="">-请选择-</option>
+#foreach($option in ${field.options})
+				<option value="${option.value}">${option.text}</option>
+#end
+			</select>
+		</span>
+#else
+		<span><i>${field.fieldComment}：</i><input type="text" class="w160" name="${field.fieldName}" id="${field.fieldName}" $vdisable /></span>
+#end
+#if($!fieldIndex % 2 == 0)  
+	</p>
+	<p>
+#end
+#set($fieldIndex=$fieldIndex+1)
+#end
+	</p>
+	<p>
+		<input type="hidden" class="w160" name="id" id="id"/>
+	</p>
+</div>
+</form>
+</body>
+</html>

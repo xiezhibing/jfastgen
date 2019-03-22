@@ -1,0 +1,15 @@
+package ${classBean.packageBean.beanPackage};
+
+import ${classBean.packageBean.entityPackage}.${classBean.entityClassName}Entity;
+
+/**
+ * VO类
+ * ${classBean.entityComment}
+ * @author ${author}
+ * @since ${date}
+ */
+public class ${classBean.entityClassName}Bean extends ${classBean.entityClassName}Entity {
+
+	private static final long serialVersionUID = 1L;
+	
+}

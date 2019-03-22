@@ -1,0 +1,8 @@
+
+# ${classBean.entityComment}
+
+|     字段     |     类型     |          说明           |
+| ------------ | ------------ |------------------------ |
+#foreach($field in ${classBean.generalFieldList})
+| ${field.fieldName} | ${field.fieldType} | ${field.fieldComment} |
+#end

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${classBean.packageBean.mapperPackage}.${classBean.entityClassName}Mapper">
+#if(${enableCache})
+	<!-- 开启二级缓存 -->
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+#end
+
+	<!-- 新增 -->
+	<insert id="add" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean" keyProperty="id" useGeneratedKeys="true">
+		insert into ${classBean.tableName} (
+#set($count=0)
+#foreach($field in ${classBean.generalFieldList})
+	#set($count=$count+1)
+	#if($count == 1)			${field.columnName}, #elseif($count < ${classBean.generalFieldList.size()})${field.columnName}, #else${field.columnName}
+	#end
+#end		
+		) values (
+#set($count2=0)
+#foreach($field in ${classBean.generalFieldList})
+	#set($fieldValue2='#{'+${field.fieldName}+'}')
+	#set($count2=$count2+1)
+	#if($count2 == 1)			${field.columnName}, #elseif($count2 < ${classBean.generalFieldList.size()})$fieldValue2, #else$fieldValue2
+	#end
+#end
+		)	
+	</insert>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
+		update ${classBean.tableName}
+		<set>
+#foreach($field in ${classBean.generalFieldList})
+#set($fieldValue3='#{'+${field.fieldName}+'}')
+			<if test="${field.fieldName} != null">${field.columnName} = $fieldValue3, </if>
+#end
+			modify_time = now()
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- 根据主键查询 -->
+	<select id="queryById" parameterType="java.lang.Long" resultType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
+		select * from ${classBean.tableName} where id = #{id} and dr = 0
+	</select>
+	
+	<!-- 通用查询条件 -->
+	<sql id="whereSql">
+#foreach($field in ${classBean.generalFieldList})
+#if(${field.fieldType.equals("String")})
+		<if test="${field.fieldName} != null and ${field.fieldName} != ''">
+			and ${field.columnName} like concat('%', #{${field.fieldName}}, '%')
+#else
+		<if test="${field.fieldName} != null">
+			and ${field.columnName} = #{${field.fieldName}}
+#end
+		</if>
+#end
+			and dr = 0
+	</sql>
+		
+	<!-- 条件查询单个对象 -->
+	<select id="queryOne" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean" resultType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
+		select * from ${classBean.tableName} where 1=1 <include refid="whereSql"/> limit 0,1
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="queryList" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean" resultType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
+		select * from ${classBean.tableName} where 1=1 <include refid="whereSql"/>
+	</select>
+	
+</mapper>

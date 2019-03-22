@@ -1,0 +1,14 @@
+package ${classBean.packageBean.mapperPackage};
+
+import io.parcelx.base.mapper.BaseMapper;
+import ${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean;
+
+/**
+ * Mapper类
+ * ${classBean.entityComment}
+ * @author ${author}
+ * @since ${date}
+ */
+public interface ${classBean.entityClassName}Mapper extends BaseMapper<${classBean.entityClassName}Bean> {
+
+}

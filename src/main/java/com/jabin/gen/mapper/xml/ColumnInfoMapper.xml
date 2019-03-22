@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jabin.gen.mapper.ColumnInfoMapper">
+
+	<!-- 条件查询 -->
+	<select id="queryTableList" parameterType="java.lang.String" resultType="com.jabin.gen.model.entity.TableInfo">
+		select table_schema, table_name, table_comment from information_schema.tables where table_schema = #{tableSchema}
+	</select>
+	
+	<select id="queryColumnList" resultType="com.jabin.gen.model.entity.ColumnInfo">
+		select table_schema, table_name, column_name, column_type, column_comment, column_key from information_schema.columns 
+		where table_schema=#{tableSchema} and table_name = #{tableName} order by ordinal_position
+	</select>
+		
+</mapper>

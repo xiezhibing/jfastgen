@@ -1,0 +1,327 @@
+package ${classBean.packageBean.mockPackage};
+
+import static org.hamcrest.CoreMatchers.not;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.context.WebApplicationContext;
+
+import io.parcelx.AppStart;
+import ${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean;
+import ${classBean.packageBean.servicePackage}.I${classBean.entityClassName}Service;
+
+/**
+* ${classBean.entityComment}
+* @author ${author}
+*/
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = AppStart.class)
+public class ${classBean.entityClassName}MockController {
+
+    private MockMvc mockMvc;
+    
+    private final MediaType mediaType = MediaType.MULTIPART_FORM_DATA;
+    private final String token = "7e94fdd233d44406a6b4df6f01f82217";
+	
+	@Autowired
+    private WebApplicationContext webApplicationContext;
+	
+    @Autowired
+    private I${classBean.entityClassName}Service ${classBean.entityObjectName}Service;
+
+    @Before
+    public void setup() {
+    	mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
+
+    private MultiValueMap<String, String> initMockParam() {
+		
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+#foreach($field in ${classBean.generalFieldList})
+		map.add("${field.fieldName}", "${field.mockValue}");
+#end
+        return map;
+    }
+	
+    /**
+     * Remove All
+     * @throws Exception
+     */
+    @Test
+    public void mockRemoveAll() throws Exception {
+        List<${classBean.entityClassName}Bean> list = ${classBean.entityObjectName}Service.queryList(new ${classBean.entityClassName}Bean());
+        for (${classBean.entityClassName}Bean bean : list) {
+            // Delete
+            mockMvc.perform(post("/api/v1/${classBean.entityObjectName}/remove")
+                .contentType(mediaType)
+        		.header("token", token)
+        		.param("id", bean.getId())
+        		.accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.code").value("200"));
+        }
+    }
+
+    /**
+     * Get
+     * @throws Exception
+     */
+    @Test
+    public void mockGet() throws Exception {
+    	MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    	//请自行调整参数
+    	
+        mockMvc.perform(get("/api/v1/${classBean.entityObjectName}/get")
+            .contentType(mediaType)
+    		.header("token", token)
+    		.params(params)
+    		.accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andExpect(jsonPath("$.code").value("200"));
+    }
+    
+	/**
+     * Mock Add Success
+     * @throws Exception
+     */
+    @Test
+    public void mockAddSuccess() throws Exception {
+    	
+    	MultiValueMap<String, String> params = initMockParam();
+        
+    	// Add Success    	
+        mockMvc.perform(post("/api/v1/${classBean.entityObjectName}/add")
+            .contentType(mediaType)
+    		.header("token", token)
+    		.params(params)
+    		.accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andExpect(jsonPath("$.code").value("200"));
+
+    }
+
+    /**
+     * Mock Add Fail
+     * @throws Exception
+     */
+    @Test
+    public void mockAddFail() throws Exception {
+    	// Add Fail
+        MultiValueMap<String, String> params = initMockParam();
+        //请自行调整参数
+        //params.remove("");
+
+        mockMvc.perform(post("/api/v1/${classBean.entityObjectName}/add")
+            .contentType(mediaType)
+    		.header("token", token)
+    		.params(params)
+    		.accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andExpect(jsonPath("$.code", not("200")));
+    }
+    
+    /**
+     * Mock Add Success And Add Fail
+     * @throws Exception
+     */
+    @Test
+    public void mockAdd() throws Exception {
+        
+    	//Add Success
+    	mockAddSuccess();
+
+        // Add Fail
+    	mockAddFail();
+            
+        //Get
+        mockGet();
+        
+        //Remove
+        mockRemoveAll();
+    }
+    
+    /**
+     * Mock Update Success
+     * @throws Exception
+     */
+    @Test
+    public void mockUpdateSuccess() throws Exception {
+    	
+   		MultiValueMap<String, String> params = initMockParam();
+   		
+   		// Update  Success
+        params.add("id", "");
+        //请自行调整参数
+		//params.add("", "");
+		
+        mockMvc.perform(post("/api/v1/${classBean.entityObjectName}/edit")
+	        .contentType(mediaType)
+    		.header("token", token)
+    		.params(params)
+    		.accept(MediaType.APPLICATION_JSON))
+	        .andExpect(status().isOk())
+	        .andDo(print())
+	        .andExpect(jsonPath("$.code").value("200"));
+    } 
+    
+    /**
+     * Mock Update Fail
+     * @throws Exception
+     */
+    @Test
+    public void mockUpdateFail() throws Exception {
+    	
+   		MultiValueMap<String, String> params = initMockParam();
+   		
+        //Update Fail
+		params.add("id", "");
+		//请自行调整参数
+		//params.add("", "");
+		
+        mockMvc.perform(post("/api/v1/${classBean.entityObjectName}/edit")
+	        .contentType(mediaType)
+    		.header("token", token)
+    		.params(params)
+    		.accept(MediaType.APPLICATION_JSON))
+	        .andExpect(status().isOk())
+	        .andDo(print())
+	        .andExpect(jsonPath("$.code").value(not("200")));	     
+    }
+    
+    /**
+     * Mock Update Success And Update Fail
+     * @throws Exception
+     */
+    @Test
+    public void mockUpdate() throws Exception {
+    
+    	//Add Success
+   		mockAddSuccess();
+   		
+   		//Update Success
+   		mockUpdateSuccess();
+   		
+   		//Get
+   		mockGet();
+   		
+   		//Update Fail
+   		mockUpdateFail();
+   		
+   		//Get
+   		mockGet();
+	        
+        //Remove All
+        mockRemoveAll();
+    }
+    
+    /**
+     * Mock Remove Success
+     * @throws Exception
+     */
+    @Test
+    public void mockRemoveSuccess() throws Exception {
+    	String id = "";
+        
+    	mockMvc.perform(post("/api/v1/${classBean.entityObjectName}/remove")
+            .contentType(mediaType)
+    		.header("token", token)
+    		.param("id", id)
+    		.accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andExpect(jsonPath("$.code").value("200"));
+	}
+
+    @Test
+    public void mockRemoveFail() throws Exception {
+    	String id = "";
+        
+    	mockMvc.perform(post("/api/v1/${classBean.entityObjectName}/remove")
+            .contentType(mediaType)
+    		.header("token", token)
+    		.param("id", id)
+    		.accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andExpect(jsonPath("$.code").value(not("200")));
+	}
+    
+    /**
+     * Mock Revert Success
+     * @throws Exception
+     */
+    @Test
+    public void mockRevertSuccess() throws Exception {
+    	String id = "";
+        
+        //Revert Success
+        mockMvc.perform(post("/api/v1/${classBean.entityObjectName}/revert")
+            .contentType(mediaType)
+    		.header("token", token)
+    		.param("id", id)
+    		.accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andExpect(jsonPath("$.code").value("200"));
+	}
+    
+    /**
+     * Mock Revert Fail
+     * @throws Exception
+     */
+    @Test
+    public void mockRevertFail() throws Exception {
+    	String id = "";
+        
+        //Revert Fail
+        mockMvc.perform(post("/api/v1/${classBean.entityObjectName}/revert")
+            .contentType(mediaType)
+    		.header("token", token)
+    		.param("id", id)
+    		.accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andExpect(jsonPath("$.code").value(not("200")));
+	}
+    
+    /**
+     * Mock Remove Success And Revert Fail
+     * @throws Exception
+     */
+    @Test
+    public void mockRemoveAndRevert() throws Exception {
+    	
+    	//Add
+    	mockAddSuccess();
+		
+    	//Remove
+    	mockRemoveSuccess();
+    	
+    	//Revert
+    	mockRevertSuccess();
+    	
+        // Remove All
+        mockRemoveAll();
+	}
+
+}

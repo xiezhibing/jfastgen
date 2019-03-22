@@ -1,0 +1,48 @@
+package ${classBean.packageBean.serviceImplPackage};
+
+import com.meosun.booker.base.mapper.BaseMapper;
+import com.meosun.booker.base.service.BaseServiceImpl;
+import ${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean;
+import ${classBean.packageBean.mapperPackage}.${classBean.entityClassName}Mapper;
+import ${classBean.packageBean.servicePackage}.I${classBean.entityClassName}Service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/**
+ * 业务实现类
+ * ${classBean.entityComment}
+ * @author ${author}
+ * @since ${date}
+ */
+@Service("${classBean.entityObjectName}Service")
+public class ${classBean.entityClassName}ServiceImpl extends BaseServiceImpl<${classBean.entityClassName}Bean> implements I${classBean.entityClassName}Service {
+	
+	private static final long serialVersionUID = 1L;
+	private static Logger logger = LoggerFactory.getLogger(${classBean.entityClassName}ServiceImpl.class);
+	
+	@Autowired
+	private ${classBean.entityClassName}Mapper ${classBean.entityObjectName}Mapper;
+	
+	@Override
+	public BaseMapper<${classBean.entityClassName}Bean> getBaseMapper() {
+		return ${classBean.entityObjectName}Mapper;
+	}
+	
+	@Override
+	public long save(${classBean.entityClassName}Bean bean) {
+		if(bean == null){
+			logger.info("bean is null");
+			return 0;
+		}
+		
+		if(bean.getId() == null || bean.getId() == 0){
+			return ${classBean.entityObjectName}Mapper.add(bean);			
+		} else {			
+			return ${classBean.entityObjectName}Mapper.update(bean);			
+		}
+	}
+	
+}

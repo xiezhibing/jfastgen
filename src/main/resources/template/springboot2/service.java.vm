@@ -1,0 +1,14 @@
+package ${classBean.packageBean.servicePackage};
+
+import io.parcelx.base.service.IBaseService;
+import ${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean;
+
+/**
+ * 业务类接口
+ * ${classBean.entityComment}
+ * @author ${author}
+ * @since ${date}
+ */
+public interface I${classBean.entityClassName}Service extends IBaseService<${classBean.entityClassName}Bean> {
+
+}
