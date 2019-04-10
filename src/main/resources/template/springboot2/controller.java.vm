@@ -25,116 +25,116 @@ import ${classBean.packageBean.servicePackage}.I${classBean.entityClassName}Serv
  * @author ${author}
  */
 @RestController
-@RequestMapping("/api/v1/${classBean.entityObjectName}/")
+@RequestMapping("/api/v1/${classBean.entityObjectName}/" )
 public class ${classBean.entityClassName}Controller implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	private static Logger logger = LoggerFactory.getLogger(${classBean.entityClassName}Controller.class);
-	
-	@Autowired
-	private I${classBean.entityClassName}Service ${classBean.entityObjectName}Service;
-	
-	/**
-	 * 分页查询
-	 * @param bean
-	 * @return
-	 */
-	@OpenApiAuth
-	@GetMapping("/get/page/list")
-	public Result getPageList(${classBean.entityClassName}Bean bean){
-		
-		PageData<${classBean.entityClassName}Bean> data = ${classBean.entityObjectName}Service.queryPageList(bean);
-		
-		return Result.getSucc(ResultCode.PTS_QUERY_SUCC, data);
-	}
-	
-	/**
-	 * 查询明细
-	 * @param id
-	 * @return
-	 */
-	@OpenApiAuth
-	@GetMapping("/get")
-	public Result get(String id){
-		
-		${classBean.entityClassName}Bean data = ${classBean.entityObjectName}Service.queryById(id);
-		
-		return Result.getSucc(ResultCode.PTS_QUERY_SUCC, data);
-	}
-	
-	/**
-	 * 添加
-	 * @param bean
-	 * @return
-	 */
-	@OpenApiAuth
-	@PostMapping("/add")
-	public Result add(@RequestJson ${classBean.entityClassName}Bean bean){
-		if(StringUtil.isEmpty(bean)){
-			return Result.get(ResultCode.ARG_PARAM_CANNOT_EMPTY, new String[]{""});
-		}
-		
-		long rows = ${classBean.entityObjectName}Service.add(bean);
-		if(rows > 0){
-			return Result.get(ResultCode.PTS_ADD_SUCC);
-		}
-		return Result.get(ResultCode.PTE_ADD_FAIL);
-	}
-	
-	/**
-	 * 编辑
-	 * @param bean
-	 * @return
-	 */
-	@OpenApiAuth
-	@PostMapping("/edit")
-	public Result edit(@RequestJson ${classBean.entityClassName}Bean bean){
-		if(StringUtil.isEmpty(bean) || StringUtil.isEmpty(bean.getId())){
-			return Result.get(ResultCode.ARG_PARAM_CANNOT_EMPTY, new String[]{"id"});
-		}
-		
-		long rows = ${classBean.entityObjectName}Service.update(bean);
-		if(rows > 0){
-			return Result.get(ResultCode.PTS_EDIT_SUCC);
-		}
-		return Result.get(ResultCode.PTE_EDIT_FAIL);
-	}
-	
-	/**
-	 * 删除
-	 * bean
-	 * @return
-	 */
-	@OpenApiAuth
-	@PostMapping("/remove")
-	public Result remove(@RequestJson ${classBean.entityClassName}Bean bean){
-		if(StringUtil.isEmpty(bean) || StringUtil.isEmpty(bean.getId())){
-			return Result.get(ResultCode.ARG_PARAM_CANNOT_EMPTY, new String[]{"id"});
-		}
-		
-		long rows = ${classBean.entityObjectName}Service.remove(bean.getId());
-		if(rows > 0){
-			return Result.get(ResultCode.PTS_REMOVE_SUCC);
-		}
-		return Result.get(ResultCode.PTE_REMOVE_FAIL);
-	}
-	
-	/**
-	 * 恢复
-	 * bean
-	 * @return
-	 */
-	@OpenApiAuth
-	@PostMapping("/revert")
-	public Result revert(@RequestJson ${classBean.entityClassName}Bean bean){
-		if(StringUtil.isEmpty(bean) || StringUtil.isEmpty(bean.getId())){
-			return Result.get(ResultCode.ARG_PARAM_CANNOT_EMPTY, new String[]{"id"});
-		}
-			
-		long rows = ${classBean.entityObjectName}Service.revert(bean.getId());
-		if(rows > 0){
-			return Result.get(ResultCode.PTS_REVERT_SUCC);
-		}
-		return Result.get(ResultCode.PTE_REVERT_FAIL);
-	}
+
+    private static final long serialVersionUID = 1L;
+    private static Logger logger = LoggerFactory.getLogger(${classBean.entityClassName}Controller.class);
+
+    @Autowired
+    private I${classBean.entityClassName}Service ${classBean.entityObjectName}Service;
+
+    /**
+     * 分页查询
+     * @param bean
+     * @return
+     */
+    @OpenApiAuth
+    @GetMapping("/get/page/list" )
+    public Result getPageList(${classBean.entityClassName}Bean bean) {
+
+        PageData<${classBean.entityClassName}Bean> data = ${classBean.entityObjectName}Service.queryPageList(bean);
+
+        return Result.getSucc(ResultCode.PTS_QUERY_SUCC, data);
+    }
+
+    /**
+     * 查询明细
+     * @param id
+     * @return
+     */
+    @OpenApiAuth
+    @GetMapping("/get" )
+    public Result get(String id) {
+
+        ${classBean.entityClassName}Bean data = ${classBean.entityObjectName}Service.queryById(id);
+
+        return Result.getSucc(ResultCode.PTS_QUERY_SUCC, data);
+    }
+
+    /**
+     * 添加
+     * @param bean
+     * @return
+     */
+    @OpenApiAuth
+    @PostMapping("/add" )
+    public Result add(@RequestJson ${classBean.entityClassName}Bean bean) {
+        if (StringUtil.isEmpty(bean)) {
+            return Result.get(ResultCode.ARG_PARAM_CANNOT_EMPTY, new String[]{""});
+        }
+
+        long rows = ${classBean.entityObjectName}Service.add(bean);
+        if (rows > 0) {
+            return Result.get(ResultCode.PTS_ADD_SUCC);
+        }
+        return Result.get(ResultCode.PTE_ADD_FAIL);
+    }
+
+    /**
+     * 编辑
+     * @param bean
+     * @return
+     */
+    @OpenApiAuth
+    @PostMapping("/edit" )
+    public Result edit(@RequestJson ${classBean.entityClassName}Bean bean) {
+        if (StringUtil.isEmpty(bean) || StringUtil.isEmpty(bean.getId())) {
+            return Result.get(ResultCode.ARG_PARAM_CANNOT_EMPTY, new String[]{"id"});
+        }
+
+        long rows = ${classBean.entityObjectName}Service.update(bean);
+        if (rows > 0) {
+            return Result.get(ResultCode.PTS_EDIT_SUCC);
+        }
+        return Result.get(ResultCode.PTE_EDIT_FAIL);
+    }
+
+    /**
+     * 删除
+     * bean
+     * @return
+     */
+    @OpenApiAuth
+    @PostMapping("/remove" )
+    public Result remove(@RequestJson ${classBean.entityClassName}Bean bean) {
+        if (StringUtil.isEmpty(bean) || StringUtil.isEmpty(bean.getId())) {
+            return Result.get(ResultCode.ARG_PARAM_CANNOT_EMPTY, new String[]{"id"});
+        }
+
+        long rows = ${classBean.entityObjectName}Service.remove(bean.getId());
+        if (rows > 0) {
+            return Result.get(ResultCode.PTS_REMOVE_SUCC);
+        }
+        return Result.get(ResultCode.PTE_REMOVE_FAIL);
+    }
+
+    /**
+     * 恢复
+     * bean
+     * @return
+     */
+    @OpenApiAuth
+    @PostMapping("/revert" )
+    public Result revert(@RequestJson ${classBean.entityClassName}Bean bean) {
+        if (StringUtil.isEmpty(bean) || StringUtil.isEmpty(bean.getId())) {
+            return Result.get(ResultCode.ARG_PARAM_CANNOT_EMPTY, new String[]{"id"});
+        }
+
+        long rows = ${classBean.entityObjectName}Service.revert(bean.getId());
+        if (rows > 0) {
+            return Result.get(ResultCode.PTS_REVERT_SUCC);
+        }
+        return Result.get(ResultCode.PTE_REVERT_FAIL);
+    }
 }

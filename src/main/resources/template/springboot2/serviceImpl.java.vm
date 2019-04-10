@@ -19,16 +19,16 @@ import org.springframework.stereotype.Service;
  */
 @Service("${classBean.entityObjectName}Service")
 public class ${classBean.entityClassName}ServiceImpl extends BaseServiceImpl<${classBean.entityClassName}Bean> implements I${classBean.entityClassName}Service {
-	
-	private static final long serialVersionUID = 1L;
-	private static Logger logger = LoggerFactory.getLogger(${classBean.entityClassName}ServiceImpl.class);
-	
-	@Autowired
-	private ${classBean.entityClassName}Mapper ${classBean.entityObjectName}Mapper;
-	
-	@Override
-	public BaseMapper<${classBean.entityClassName}Bean> getBaseMapper() {
-		return ${classBean.entityObjectName}Mapper;
-	}
-	
+
+    private static final long serialVersionUID = 1L;
+    private static Logger logger = LoggerFactory.getLogger(${classBean.entityClassName}ServiceImpl.class);
+
+    @Autowired
+    private ${classBean.entityClassName}Mapper ${classBean.entityObjectName}Mapper;
+
+    @Override
+    public BaseMapper<${classBean.entityClassName}Bean> getBaseMapper() {
+        return ${classBean.entityObjectName}Mapper;
+    }
+
 }

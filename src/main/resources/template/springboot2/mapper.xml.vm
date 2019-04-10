@@ -2,83 +2,83 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${classBean.packageBean.mapperPackage}.${classBean.entityClassName}Mapper">
 #if(${enableCache})
-	<!-- 开启二级缓存 -->
-	<!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>-->
+    <!-- 开启二级缓存 -->
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>-->
 #end
 
-	<!-- 新增 -->
-	<insert id="add" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
-		insert into ${classBean.tableName} (
+    <!-- 新增 -->
+    <insert id="add" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
+        insert into ${classBean.tableName} (
 #set($count=0)
 #foreach($field in ${classBean.generalFieldList})
-			<if test="${field.fieldName} != null">${field.columnName}, </if>
+            <if test="${field.fieldName} != null">${field.columnName}, </if>
 #end
-			id, create_time, modify_time, dr
-		) values (
+            id, create_time, modify_time, dr
+        ) values (
 #set($count2=0)
 #foreach($field in ${classBean.generalFieldList})
-			<if test="${field.fieldName} != null">#{${field.fieldName}}, </if>
+            <if test="${field.fieldName} != null">#{${field.fieldName}}, </if>
 #end
-			#{id}, now(), now(), 1
-		)	
-	</insert>
-	
-	<!-- 更新 -->
-	<update id="update" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
-		update ${classBean.tableName}
-		<set>
+            #{id}, now(), now(), 1
+        )    
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
+        update ${classBean.tableName}
+        <set>
 #foreach($field in ${classBean.generalFieldList})
 #set($fieldValue3='#{'+${field.fieldName}+'}')
-			<if test="${field.fieldName} != null">${field.columnName} = $fieldValue3, </if>
+            <if test="${field.fieldName} != null">${field.columnName} = $fieldValue3, </if>
 #end
-			modify_time = now()
-		</set>
-		where id = #{id}
-	</update>
-	
-	<!-- 删除 -->
-	<update id="remove" parameterType="java.lang.String">
-		update ${classBean.tableName} set dr = 0, modify_time = now() where id = #{id}
-	</update>
-	
-	<!-- 恢复 -->
-	<update id="revert" parameterType="java.lang.String">
-		update ${classBean.tableName} set dr = 1, modify_time = now() where id = #{id}
-	</update>
-	
-	<!-- 通用查询条件 -->
-	<sql id="whereSql">
+            modify_time = now()
+        </set>
+        where id = #{id}
+    </update>
+    
+    <!-- 删除 -->
+    <update id="remove" parameterType="java.lang.String">
+        update ${classBean.tableName} set dr = 0, modify_time = now() where id = #{id}
+    </update>
+    
+    <!-- 恢复 -->
+    <update id="revert" parameterType="java.lang.String">
+        update ${classBean.tableName} set dr = 1, modify_time = now() where id = #{id}
+    </update>
+    
+    <!-- 通用查询条件 -->
+    <sql id="whereSql">
 #foreach($field in ${classBean.generalFieldList})
 #if(${field.fieldType.equals("String")})
-		<if test="${field.fieldName} != null and ${field.fieldName} != ''">
-			and ${field.columnName} like concat('%', #{${field.fieldName}}, '%')
+        <if test="${field.fieldName} != null and ${field.fieldName} != ''">
+            and ${field.columnName} like concat('%', #{${field.fieldName}}, '%')
 #else
-		<if test="${field.fieldName} != null">
-			and ${field.columnName} = #{${field.fieldName}}
+        <if test="${field.fieldName} != null">
+            and ${field.columnName} = #{${field.fieldName}}
 #end
-		</if>
+        </if>
 #end
-			and dr = 1
-	</sql>
-	
-	<!-- 根据主键查询 -->
-	<select id="queryById" parameterType="java.lang.String" resultType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
-		select * from ${classBean.tableName} where id = #{id} and dr = 1
-	</select>
-		
-	<!-- 条件查询单个对象 -->
-	<select id="queryOne" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean" resultType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
-		select * from ${classBean.tableName} where 1=1 <include refid="whereSql"/> limit 0,1
-	</select>
-	
-	<!-- 条件查询 -->
-	<select id="queryList" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean" resultType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
-		select * from ${classBean.tableName} where 1=1 <include refid="whereSql"/>
-	</select>
-	
-	<!-- 条件查询总数量 -->
-	<select id="queryCount" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean" resultType="java.lang.Long">
-		select count(id) from ${classBean.tableName} where 1=1 <include refid="whereSql"/>
-	</select>
-	
+            and dr = 1
+    </sql>
+    
+    <!-- 根据主键查询 -->
+    <select id="queryById" parameterType="java.lang.String" resultType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
+        select * from ${classBean.tableName} where id = #{id} and dr = 1
+    </select>
+        
+    <!-- 条件查询单个对象 -->
+    <select id="queryOne" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean" resultType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
+        select * from ${classBean.tableName} where 1=1 <include refid="whereSql"/> order by modify_time desc limit 0,1
+    </select>
+    
+    <!-- 条件查询 -->
+    <select id="queryList" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean" resultType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean">
+        select * from ${classBean.tableName} where 1=1 <include refid="whereSql"/> order by modify_time desc
+    </select>
+    
+    <!-- 条件查询总数量 -->
+    <select id="queryCount" parameterType="${classBean.packageBean.beanPackage}.${classBean.entityClassName}Bean" resultType="java.lang.Long">
+        select count(id) from ${classBean.tableName} where 1=1 <include refid="whereSql"/>
+    </select>
+    
 </mapper>
